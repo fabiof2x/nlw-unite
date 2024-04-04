@@ -1,43 +1,20 @@
-import { PrismaClient } from "@prisma/client"
 import fastify from "fastify"
-import { z } from "zod"
+import { serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+import { createEvent } from "./routes/create-event";
+import { registerForEvent } from "./routes/register-for-event";
+import { getEvent } from "./routes/get-event";
+import { getAttendeeBadge } from "./routes/get-attendee-badge";
 
 const app = fastify()
 
-const prisma = new PrismaClient({
-  log: ['query']
-})
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
 
-// Métodos HTTP: GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS, ...
+app.register(createEvent)
+app.register(registerForEvent)
+app.register(getEvent)
+app.register(getAttendeeBadge)
 
-// Corpo da requisição (Request Body)
-// Parâmetros de busca (Search Params / Query Params) 'http://localhost:3333/users?name=Fabio'
-// Parâmetros de rota (Route Params) -> Identificação de recursos 'DELETE http://localhost:3333/users/5' 
-// Cabeçalhos (Headers) -> Contexto
-
-// Semânticas = Significado
-
-app.post('/events', async (request, reply) => {
-  const createEventSchema = z.object({
-    title: z.string().min(4),
-    details: z.string().nullable(),
-    maximumAttendees: z.number().int().positive().nullable()
-  })
-
-  const data = createEventSchema.parse(request.body)
-
-  const event = await prisma.event.create({
-    data: {
-      title: data.title,
-      details: data.details,
-      maximumAttendees: data.maximumAttendees,
-      slug: new Date().toISOString(),
-    }
-  })
-
-  return reply.status(201).send({ eventId: event.id })
-})
-
-app.listen({port: 3333}).then(() => {
+app.listen({ port: 3333 }).then(() => {
   console.log('HTTP server running!')
 })
