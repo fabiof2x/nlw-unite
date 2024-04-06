@@ -9,18 +9,26 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3333/events/c5756887-7ffe-4659-87e2-6237b0d650b2/attendees
+POST http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees
 Content-Type: application/json
 
 {
   "name": "Fábio Dias",
-  "email": "fabioa@f2x.dev"
+  "email": "fabio@f2x.dev"
 }
 
 ###
 
-GET http://localhost:3333/events/c5756887-7ffe-4659-87e2-6237b0d650b2
+GET http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33
 
 ###
 
-GET http://localhost:3333/attendees/3/badge
+GET http://localhost:3333/attendees/4/badge
+
+###
+
+GET http://localhost:3333/attendees/4/check-in
+
+###
+
+GET http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees?query=fábio
